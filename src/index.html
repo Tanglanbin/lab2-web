@@ -16,10 +16,10 @@
     </style>
 </head>
 <body>
-<script src="js/three.min.js"></script>
-<script src="js/FirstPersonControls.js"></script>
-<script src="js/socket.io.js"></script>
-<script src="js/GLTFLoader.js"></script>
+<script src="../js/three.min.js"></script>
+<script src="../js/FirstPersonControls.js"></script>
+<script src="../js/socket.io.js"></script>
+<script src="../js/GLTFLoader.js"></script>
 <script>
     //创建场景
     const scene = new THREE.Scene();
@@ -43,19 +43,19 @@
     // 接下来创建材质并映射到指定图片，设定为只渲染背面（对立方体来说，从外面看到的是正面，从内部看到的是背面）
     const textureLoader = new THREE.TextureLoader();
     const skyBoxMaterial = [
-        new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/px.jpg'), side: THREE.BackSide}), // right
-        new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/nx.jpg'), side: THREE.BackSide}), // left
-        new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/py.jpg'), side: THREE.BackSide}), // top
-        new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/ny.jpg'), side: THREE.BackSide}), // bottom
-        new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/pz.jpg'), side: THREE.BackSide}), // back
-        new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/nz.jpg'), side: THREE.BackSide})  // front
+        new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/px.jpg'), side: THREE.BackSide}), // right
+        new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/nx.jpg'), side: THREE.BackSide}), // left
+        new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/py.jpg'), side: THREE.BackSide}), // top
+        new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/ny.jpg'), side: THREE.BackSide}), // bottom
+        new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/pz.jpg'), side: THREE.BackSide}), // back
+        new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/nz.jpg'), side: THREE.BackSide})  // front
     ];
     var skyMaterial = new THREE.MeshFaceMaterial(skyBoxMaterial);
     // 创建天空盒子并添加到场景
     const skyBox = new THREE.Mesh(skyBoxGeometry, skyMaterial);
     scene.add(skyBox);
     // 添加地板
-    textureLoader.load("./assets/textures/floor/FloorsCheckerboard_S_Diffuse.jpg", function (texture) {
+    textureLoader.load("../assets/textures/floor/FloorsCheckerboard_S_Diffuse.jpg", function (texture) {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(4, 4);
         const floorMaterial = new THREE.MeshBasicMaterial({

@@ -1,3 +1,7 @@
+const THREE = require('three');
+const GLTFLoader = require('three-gltf-loader');
+const io = require('socket.io-client');
+
 //创建场景
 const scene = new THREE.Scene();
 //添加摄像机
@@ -20,19 +24,19 @@ const skyBoxGeometry = new THREE.BoxGeometry(500, 500, 500);
 // 接下来创建材质并映射到指定图片，设定为只渲染背面（对立方体来说，从外面看到的是正面，从内部看到的是背面）
 const textureLoader = new THREE.TextureLoader();
 const skyBoxMaterial = [
-    new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/px.jpg'), side: THREE.BackSide}), // right
-    new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/nx.jpg'), side: THREE.BackSide}), // left
-    new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/py.jpg'), side: THREE.BackSide}), // top
-    new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/ny.jpg'), side: THREE.BackSide}), // bottom
-    new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/pz.jpg'), side: THREE.BackSide}), // back
-    new THREE.MeshBasicMaterial({map: textureLoader.load('./assets/textures/skybox/nz.jpg'), side: THREE.BackSide})  // front
+    new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/px.jpg'), side: THREE.BackSide}), // right
+    new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/nx.jpg'), side: THREE.BackSide}), // left
+    new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/py.jpg'), side: THREE.BackSide}), // top
+    new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/ny.jpg'), side: THREE.BackSide}), // bottom
+    new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/pz.jpg'), side: THREE.BackSide}), // back
+    new THREE.MeshBasicMaterial({map: textureLoader.load('../assets/textures/skybox/nz.jpg'), side: THREE.BackSide})  // front
 ];
 var skyMaterial = new THREE.MeshFaceMaterial(skyBoxMaterial);
 // 创建天空盒子并添加到场景
 const skyBox = new THREE.Mesh(skyBoxGeometry, skyMaterial);
 scene.add(skyBox);
 // 添加地板
-textureLoader.load("./assets/textures/floor/FloorsCheckerboard_S_Diffuse.jpg", function (texture) {
+textureLoader.load("../assets/textures/floor/FloorsCheckerboard_S_Diffuse.jpg", function (texture) {
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(4, 4);
     const floorMaterial = new THREE.MeshBasicMaterial({
@@ -44,7 +48,7 @@ textureLoader.load("./assets/textures/floor/FloorsCheckerboard_S_Diffuse.jpg", f
     floor.position.y = 0;
     floor.rotation.x = Math.PI / 2;
     scene.add(floor);
-})
+});
 
 // W S A D 的keycode
 const KEY_W = 87;
@@ -181,11 +185,12 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
 window.addEventListener("resize", onWindowResize);
 
-const socket = io('http://ec2-34-201-66-41.compute-1.amazonaws.com:3000')
 
-
+// const socket = io('localhost:3000');
+const socket = io('http://ec2-34-201-66-41.compute-1.amazonaws.com:3000');
 
 
 let playerMap = new Map();
@@ -195,8 +200,8 @@ socket.on('player', data => {
         model.position.set(data.position.x, data.position.y, data.position.z);
         model.rotation.set(data.rotation._x, data.rotation._y + Math.PI / 2, data.rotation._z);
     } else {
-        const loader = new THREE.GLTFLoader();
-        loader.load("./assets/models/duck.glb", (mesh) => {
+        const loader = new GLTFLoader();
+        loader.load("../assets/models/duck.glb", (mesh) => {
             mesh.scene.scale.set(10, 10, 10);
             scene.add(mesh.scene);
             playerMap.set(data.socketid, mesh.scene);
@@ -212,10 +217,12 @@ socket.on('offline', data => {
 
 //回调函数
 let clock = new THREE.Clock();
+
 function render() {
     fpc.update(clock.getDelta());
     socket.emit('player', {position: fpc.yawObject.position, rotation: fpc.yawObject.rotation});
     requestAnimationFrame(render);
     renderer.render(scene, camera);
 }
+
 render();

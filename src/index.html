@@ -217,7 +217,7 @@
             model.position.set(data.position.x, data.position.y, data.position.z);
             model.rotation.set(data.rotation._x, data.rotation._y + Math.PI / 2, data.rotation._z);
         } else {
-            const loader = new GLTFLoader();
+            const loader = new THREE.GLTFLoader();
             loader.load("../assets/models/duck.glb", (mesh) => {
                 mesh.scene.scale.set(10, 10, 10);
                 scene.add(mesh.scene);
